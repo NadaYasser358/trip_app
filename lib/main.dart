@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graduation/app_constants/routes_manager.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
 import 'package:graduation/view/screens/form/form.dart';
+import 'package:graduation/view/screens/home/home.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -12,9 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: ChangeNotifierProvider(create: (_)=> TripRequestProvider(),child: const TripFormPageView(),),
-      ),
+      routes: {
+        RoutesManager.home:(_)=>const Home(),
+        RoutesManager.baseForm:(_)=>const BasicTripForm()
+      },
+      initialRoute: RoutesManager.home,
+
     );
   }
 }

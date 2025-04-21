@@ -6,14 +6,14 @@ import 'form_screens/distnation.dart';
 import 'form_screens/interests_check.dart';
 import 'form_screens/interests_reorder.dart';
 
-class TripFormPageView extends StatefulWidget {
-  const TripFormPageView({super.key});
+class BasicTripForm extends StatefulWidget {
+  const BasicTripForm({super.key});
 
   @override
-  State<TripFormPageView> createState() => _TripFormPageViewState();
+  State<BasicTripForm> createState() => _BasicTripFormState();
 }
 
-class _TripFormPageViewState extends State<TripFormPageView> {
+class _BasicTripFormState extends State<BasicTripForm> {
   final _pageController = PageController();
   int _pageIndex = 0;
 
