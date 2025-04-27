@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class InterestSorter extends StatefulWidget {
   final List<String> initial;
@@ -33,12 +34,17 @@ class _InterestSorterState extends State<InterestSorter> {
       },
       children: [
         for (final item in items)
-          ListTile(
+          Padding(
             key: ValueKey(item),
-            title: Text(item),
-            leading: const Icon(Icons.drag_handle),
+            padding: EdgeInsets.all(10.0.r),
+            child: ListTile(
+              title: Text(item,style: Theme.of(context).textTheme.titleMedium,),
+              leading: const Icon(Icons.check),
+              shape: RoundedRectangleBorder(side: BorderSide(color: Colors.blue),borderRadius: BorderRadius.circular(25.r))
+            ),
           )
       ],
+
     );
   }
 }

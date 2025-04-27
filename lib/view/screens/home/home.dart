@@ -26,15 +26,15 @@ class _HomeState extends State<Home> {
 
       appBar: AppBar(backgroundColor: Colors.blue,title: Text("Trip Minder",style: TextStyle(color: Colors.white),),),
       bottomNavigationBar: CurvedNavigationBar(items: [
-        Icon(Icons.home_filled,size: 40,color: Colors.blue,),
-        Icon(Icons.auto_awesome,size: 40,color: Colors.blue,),
-        Icon(Icons.bookmark_outlined,size: 40,color: Colors.blue,),
-        Icon(Icons.person,size: 40,color: Colors.blue,),
+        Icon(Icons.home_filled,size: 40,color: Colors.white,),
+        Icon(Icons.auto_awesome,size: 40,color: Colors.white,),
+        Icon(Icons.bookmark_outlined,size: 40,color: Colors.white,),
+        Icon(Icons.person,size: 40,color: Colors.white,),
 
       ],
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: Colors.transparent,
-        color: const Color(0xFF797272),
+        buttonBackgroundColor: Colors.blue,
+        color: Colors.blue,
         index: pageIndex,
         onTap: (value) => setState(() {
           pageIndex=value;

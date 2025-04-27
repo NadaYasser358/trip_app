@@ -1,6 +1,6 @@
 class ApiConstants{
-  //https://b640-197-132-206-36.ngrok-free.app/Api/v1/tripsuggester/optimize
-  //https://b640-197-132-206-36.ngrok-free.app/Api/v1/tripsuggester/optimize
-  static const baseUrl="b640-197-132-206-36.ngrok-free.app";
-  static const tripSuggesterEndPoint="Api/v1/tripsuggester/optimize";
+
+  //https://a3d1-197-132-206-36.ngrok-free.app/
+  static const baseUrl="f0d2-102-191-14-202.ngrok-free.app";
+  static const tripSuggesterEndPoint="/Api/v1/tripsuggester/optimize";
 }

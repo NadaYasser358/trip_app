@@ -1,125 +1,164 @@
-import 'package:graduation/model/data_models/resturant.dart';
-import 'package:graduation/model/data_models/tourism_erea.dart';
-
-import 'accomodation.dart';
-import 'entertainments.dart';
-
 class TripGenerated {
-  late int statusCode;
-  Meta? meta;
-  late bool succeeded;
-  late String message;
-  Null errors;
-  Null errorsBag;
-  Data? data;
+  final int statusCode;
+  final Meta meta;
+  final bool succeeded;
+  final String message;
+  final dynamic errors;
+  final dynamic errorsBag;
+  final TripData data;
 
-  TripGenerated(
-      {required this.statusCode,
-        this.meta,
-        required this.succeeded,
-        required this.message,
-        this.errors,
-        this.errorsBag,
-        required this.data});
+  TripGenerated({
+    required this.statusCode,
+    required this.meta,
+    required this.succeeded,
+    required this.message,
+    this.errors,
+    this.errorsBag,
+    required this.data,
+  });
 
-  TripGenerated.fromJson(Map<String, dynamic> json) {
-    statusCode = json['statusCode'];
-    meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
-    succeeded = json['succeeded'];
-    message = json['message'];
-    errors = json['errors'];
-    errorsBag = json['errorsBag'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  factory TripGenerated.fromJson(Map<String, dynamic> json) {
+    return TripGenerated(
+      statusCode: json['statusCode'],
+      meta: Meta.fromJson(json['meta']),
+      succeeded: json['succeeded'],
+      message: json['message'],
+      errors: json['errors'],
+      errorsBag: json['errorsBag'],
+      data: json['data'] != null
+          ? TripData.fromJson(json['data'])
+          : TripData.empty(), // Add an empty fallback or make it nullable
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['statusCode'] = statusCode;
-    if (meta != null) {
-      data['meta'] = meta!.toJson();
-    }
-    data['succeeded'] = succeeded;
-    data['message'] = message;
-    data['errors'] = errors;
-    data['errorsBag'] = errorsBag;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
+    return {
+      'statusCode': statusCode,
+      'meta': meta.toJson(),
+      'succeeded': succeeded,
+      'message': message,
+      'errors': errors,
+      'errorsBag': errorsBag,
+      'data': data.toJson(),
+    };
   }
 }
 
 class Meta {
-  int? totalItems;
-  int? totalSolutions;
+  final int totalItems;
+  final int totalSolutions;
 
-  Meta({this.totalItems, this.totalSolutions});
+  Meta({required this.totalItems, required this.totalSolutions});
 
-  Meta.fromJson(Map<String, dynamic> json) {
-    totalItems = json['totalItems'];
-    totalSolutions = json['totalSolutions'];
+  factory Meta.fromJson(Map<String, dynamic> json) {
+    return Meta(
+      totalItems: json['totalItems'],
+      totalSolutions: json['totalSolutions'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['totalItems'] = totalItems;
-    data['totalSolutions'] = totalSolutions;
-    return data;
+    return {
+      'totalItems': totalItems,
+      'totalSolutions': totalSolutions,
+    };
   }
 }
 
-class Data {
-  Accommodation? accommodation;
-  List<Restaurant>? restaurants;
-  List<Entertainment>? entertainments;
-  List<TourismArea>? tourismAreas;
+class TripData {
+  final Place accommodation;
+  final List<Place> restaurants;
+  final List<Place> entertainments;
+  final List<Place> tourismAreas;
 
-  Data(
-      {this.accommodation,
-        this.restaurants,
-        this.entertainments,
-        this.tourismAreas});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    accommodation = json['accommodation'] != null
-        ?  Accommodation.fromJson(json['accommodation'])
-        : null;
-    if (json['restaurants'] != null) {
-      restaurants = <Restaurant>[];
-      json['restaurants'].forEach((v) {
-        restaurants!.add( Restaurant.fromJson(v));
-      });
-    }
-    if (json['entertainments'] != null) {
-      entertainments = <Entertainment>[];
-      json['entertainments'].forEach((v) {
-        entertainments!.add(Entertainment.fromJson(v));
-      });
-    }
-    if (json['tourismAreas'] != null) {
-      tourismAreas = <TourismArea>[];
-      json['tourismAreas'].forEach((v) {
-        tourismAreas!.add(TourismArea.fromJson(v));
-      });
-    }
+  TripData({
+    required this.accommodation,
+    required this.restaurants,
+    required this.entertainments,
+    required this.tourismAreas,
+  });
+  factory TripData.empty() {
+    return TripData(
+      accommodation: Place.empty(),
+      restaurants: [],
+      entertainments: [],
+      tourismAreas: [],
+    );
+  }
+  factory TripData.fromJson(Map<String, dynamic> json) {
+    return TripData(
+      accommodation: Place.fromJson(json['accommodation']),
+      restaurants: List<Place>.from(json['restaurants'].map((x) => Place.fromJson(x))),
+      entertainments: List<Place>.from(json['entertainments'].map((x) => Place.fromJson(x))),
+      tourismAreas: List<Place>.from(json['tourismAreas'].map((x) => Place.fromJson(x))),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (accommodation != null) {
-      data['accommodation'] = accommodation!.toJson();
-    }
-    if (restaurants != null) {
-      data['restaurants'] = restaurants!.map((v) => v.toJson()).toList();
-    }
-    if (entertainments != null) {
-      data['entertainments'] =
-          entertainments!.map((v) => v.toJson()).toList();
-    }
-    if (tourismAreas != null) {
-      data['tourismAreas'] = tourismAreas!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return {
+      'accommodation': accommodation.toJson(),
+      'restaurants': restaurants.map((x) => x.toJson()).toList(),
+      'entertainments': entertainments.map((x) => x.toJson()).toList(),
+      'tourismAreas': tourismAreas.map((x) => x.toJson()).toList(),
+    };
   }
 }
 
+class Place {
+  final int id;
+  final String name;
+  final String classType;
+  final int averagePricePerAdult;
+  final double score;
+  final int placeType;
+  final int rating;
+  final String? imageSource;
+
+  Place({
+    required this.id,
+    required this.name,
+    required this.classType,
+    required this.averagePricePerAdult,
+    required this.score,
+    required this.placeType,
+    required this.rating,
+    this.imageSource,
+  });
+  factory Place.empty() {
+    return Place(
+      id: 0,
+      name: '',
+      classType: '',
+      averagePricePerAdult: 0,
+      score: 0.0,
+      placeType: 0,
+      rating: 0,
+      imageSource: null,
+    );
+  }
+  factory Place.fromJson(Map<String, dynamic> json) {
+    return Place(
+      id: json['id'],
+      name: json['name'],
+      classType: json['classType'],
+      averagePricePerAdult: json['averagePricePerAdult'],
+      score: (json['score'] as num).toDouble(),
+      placeType: json['placeType'],
+      rating: json['rating'],
+      imageSource: json['imageSource'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'classType': classType,
+      'averagePricePerAdult': averagePricePerAdult,
+      'score': score,
+      'placeType': placeType,
+      'rating': rating,
+      'imageSource': imageSource,
+    };
+  }
+}
