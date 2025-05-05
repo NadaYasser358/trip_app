@@ -7,7 +7,6 @@ import '../data_models/trip_generated.dart';
 
 class ApiServices{
   static Future<TripGenerated> getGeneratedTrip(TripRequest tripRequest)async{
-    print('get generated trip called');
     var url=Uri.https(ApiConstants.baseUrl,ApiConstants.tripSuggesterEndPoint);
 
     final response = await https.post(

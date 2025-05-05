@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +11,8 @@ class BudgetTravelers extends StatefulWidget {
 }
 
 class _BudgetTravelersState extends State<BudgetTravelers> {
-  TextEditingController _budgetValue = TextEditingController();
-  TextEditingController _travelersValue = TextEditingController();
+  final TextEditingController _budgetValue = TextEditingController();
+  final TextEditingController _travelersValue = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class _BudgetTravelersState extends State<BudgetTravelers> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Image(image: AssetImage("assets/image/money.jpeg"),width: 200.w,height: 200.h,),
+            Image(image: const AssetImage("assets/image/money.jpeg"),width: 200.w,height: 200.h,),
             SizedBox(height: 20.h,),
             Text("Enter budget per adult",style: Theme.of(context).textTheme.headlineMedium,),
             SizedBox(height: 10.h,),

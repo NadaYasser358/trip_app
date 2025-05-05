@@ -10,8 +10,8 @@ class GenerateTripTab extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Image(image: AssetImage("assets/image/travel.jpeg"),width: 400.w,height: 400.h,),
-          ElevatedButton(onPressed: ()=>Navigator.pushNamed(context, RoutesManager.baseForm), child: Text("generate trip")),
+          Image(image: const AssetImage("assets/image/travel.jpeg"),width: 400.w,height: 400.h,),
+          ElevatedButton(onPressed: ()=>Navigator.pushNamed(context, RoutesManager.baseForm), child: const Text("generate trip")),
 
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation/app_constants/routes_manager.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
 import 'package:graduation/view/screens/basic_form/form.dart';
+import 'package:graduation/view/screens/customize_form/customize_trip_form.dart';
 import 'package:graduation/view/screens/home/home.dart';
 import 'package:graduation/view/screens/trip_details.dart';
 import 'package:graduation/view/theme/light.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
             RoutesManager.home: (_) => const Home(),
             RoutesManager.baseForm: (_) => const BasicTripForm(),
             RoutesManager.tripDetailsScreen: (_) => const TripDetailsStepper(),
+            RoutesManager.customizationForm: (_)=> const CustomizationForm()
           },
           initialRoute: RoutesManager.home,
         );

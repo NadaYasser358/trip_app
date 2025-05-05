@@ -8,7 +8,7 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder: (context, index) => GestureDetector(child: CustomTripCard(),onTap: ()=>Navigator.pushNamed(context, RoutesManager.tripDetailsScreen),),
+      itemBuilder: (context, index) => GestureDetector(child: const CustomTripCard(),onTap: ()=>Navigator.pushNamed(context, RoutesManager.tripDetailsScreen),),
       itemCount: 10,
     );
   }

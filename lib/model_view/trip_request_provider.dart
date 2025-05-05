@@ -1,12 +1,17 @@
 import 'package:graduation/model/data_models/trip_request.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation/view/screens/customize_form/taps/accommodation_filters.dart';
+import 'package:graduation/view/screens/customize_form/taps/entertainments_filter.dart';
+import 'package:graduation/view/screens/customize_form/taps/food.dart';
+import 'package:graduation/view/screens/customize_form/taps/tourizm_filter.dart';
 
 class TripRequestProvider extends ChangeNotifier {
   int governorateId = 0;
   int zoneId = 0;
   int budgetPerAdult = 0;
-  int numberOfTravelers =0;
+  int numberOfTravelers = 0;
   final List<String> _interests = [];
+  final List<Widget> filters = [];
   int maxRestaurants = 0;
   int maxAccommodations = 0;
   int maxEntertainments = 0;
@@ -57,6 +62,22 @@ class TripRequestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void filtersList() {
+    if (_interests.contains("food")) {
+      filters.add(const FoodFilter());
+    }
+    if (_interests.contains("entertainments")) {
+      filters.add(const EntertainmentsFilter());
+    }
+    if (_interests.contains("tourismAreas")) {
+      filters.add(const TourismFilter());
+    }
+    if (_interests.contains("accommodation")) {
+      filters.add(const AccommodationFilter());
+    }
+    notifyListeners();
+  }
+
   void _toggleInterest(String name, bool isSelected) {
     if (isSelected && !_interests.contains(name)) {
       _interests.add(name);
@@ -93,4 +114,3 @@ class TripRequestProvider extends ChangeNotifier {
     );
   }
 }
-

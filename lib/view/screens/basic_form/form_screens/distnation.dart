@@ -27,7 +27,7 @@ class _DestinationState extends State<Destination> {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage("assets/image/location.jpeg"),width: 200.w,height: 200.h,),
+            Image(image: const AssetImage("assets/image/location.jpeg"),width: 200.w,height: 200.h,),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20.h),
               child: Text("Let's start your trip",style: Theme.of(context).textTheme.headlineLarge,),

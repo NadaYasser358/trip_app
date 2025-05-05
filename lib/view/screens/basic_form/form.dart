@@ -1,11 +1,13 @@
 // lib/pages/trip_form_page.dart
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation/app_constants/routes_manager.dart';
+import 'package:graduation/app_constants/service_allocator.dart';
+import 'package:graduation/model_view/trip_request_provider.dart';
+import 'package:graduation/view/widgets/custom_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../model/data_models/trip_generated.dart';
 import '../../../model/data_sources/api_services.dart';
-import '../../../model_view/trip_request_provider.dart';
 import 'form_screens/budget.dart';
 import 'form_screens/distnation.dart';
 import 'form_screens/interests_check.dart';
@@ -40,9 +42,31 @@ class _BasicTripFormState extends State<BasicTripForm> {
     }
   }
 
+  Future<void> showCustomizationPopup({
+    required BuildContext context,
+    required VoidCallback onCustomize,
+    required VoidCallback onSkip,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return CustomizationDialog(
+          title: 'Customize Your Trip',
+          message:
+              'Would you like to further customize your interests before we generate your trip?',
+          primaryButtonText: 'Yes, customize',
+          secondaryButtonText: 'No, generate now',
+          onPrimaryPressed: onCustomize,
+          onSecondaryPressed: onSkip,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final tripProvider = Provider.of<TripRequestProvider>(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text("Plan Your Trip")),
       body: Column(
@@ -77,17 +101,22 @@ class _BasicTripFormState extends State<BasicTripForm> {
                       else
                         ElevatedButton(
                           onPressed: () async {
-                            FocusScope.of(context).unfocus();
-                            tripProvider.updateLimits(
-                                restaurants: 3,
-                                accommodations: 1,
-                                entertainments: 3,
-                                tourismAreas: 3);
-                            final request = tripProvider.buildRequest();
-                            print(request.toJson().toString());
-                            final TripGenerated trip =
-                                await ApiServices.getGeneratedTrip(request);
-                            debugPrint(trip.toJson().toString());
+                            await showCustomizationPopup(
+                              context: context,
+                              onCustomize: () {
+                                tripProvider.filtersList();
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, RoutesManager.customizationForm);
+                              },
+                              onSkip: () async {
+                                Navigator.pop(context);
+                                final request = tripProvider.buildRequest();
+                                final TripGenerated trip =
+                                    await ApiServices.getGeneratedTrip(request);
+                                debugPrint(trip.toJson().toString());
+                              },
+                            );
                           },
                           child: const Text("Submit"),
                         ),

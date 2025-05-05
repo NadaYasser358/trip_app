@@ -40,7 +40,7 @@ class _InterestSorterState extends State<InterestSorter> {
             child: ListTile(
               title: Text(item,style: Theme.of(context).textTheme.titleMedium,),
               leading: const Icon(Icons.check),
-              shape: RoundedRectangleBorder(side: BorderSide(color: Colors.blue),borderRadius: BorderRadius.circular(25.r))
+              shape: RoundedRectangleBorder(side: const BorderSide(color: Colors.blue),borderRadius: BorderRadius.circular(25.r))
             ),
           )
       ],

@@ -15,17 +15,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int pageIndex=0;
   List<Widget> tabs=[
-    HomeTab(),
-    GenerateTripTab(),
-    MarkedTripsTab(),
-    ProfileTab()
+    const HomeTab(),
+    const GenerateTripTab(),
+    const MarkedTripsTab(),
+    const ProfileTab()
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
-      appBar: AppBar(backgroundColor: Colors.blue,title: Text("Trip Minder",style: TextStyle(color: Colors.white),),),
-      bottomNavigationBar: CurvedNavigationBar(items: [
+      appBar: AppBar(backgroundColor: Colors.blue,title: const Text("Trip Minder",style: TextStyle(color: Colors.white),),),
+      bottomNavigationBar: CurvedNavigationBar(items: const [
         Icon(Icons.home_filled,size: 40,color: Colors.white,),
         Icon(Icons.auto_awesome,size: 40,color: Colors.white,),
         Icon(Icons.bookmark_outlined,size: 40,color: Colors.white,),

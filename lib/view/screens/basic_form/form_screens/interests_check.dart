@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graduation/app_constants/app_styles.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
 import 'package:graduation/view/widgets/custom_check_box.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,7 @@ class _InterestsCheckState extends State<InterestsCheck> {
     return Column(
       children: [
         Image(
-          image: AssetImage("assets/image/elmond.jpeg"),
+          image: const AssetImage("assets/image/elmond.jpeg"),
           width: 250.w,
           height: 250.h,
         ),

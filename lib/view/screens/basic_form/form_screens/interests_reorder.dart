@@ -13,7 +13,7 @@ class InterestsReorder extends StatelessWidget {
     final provider = Provider.of<TripRequestProvider>(context);
     return Column(
       children: [
-        Image(image: AssetImage("assets/image/elmond.jpeg"),width: 200.w,height: 200.h,),
+        Image(image: const AssetImage("assets/image/elmond.jpeg"),width: 200.w,height: 200.h,),
         Text("Order Your interests according to your priority",style: Theme.of(context).textTheme.titleMedium,),
         Text("Drag and move up",style: Theme.of(context).textTheme.titleMedium,),
         InterestSorter(
