@@ -100,23 +100,27 @@ class _BasicTripFormState extends State<BasicTripForm> {
                             onPressed: _nextPage, child: const Text("Next"))
                       else
                         ElevatedButton(
-                          onPressed: () async {
-                            await showCustomizationPopup(
-                              context: context,
-                              onCustomize: () {
-                                tripProvider.filtersList();
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
-                                    context, RoutesManager.customizationForm);
-                              },
-                              onSkip: () async {
-                                Navigator.pop(context);
-                                final request = tripProvider.buildRequest();
-                                final TripGenerated trip =
-                                    await ApiServices.getGeneratedTrip(request);
-                                debugPrint(trip.toJson().toString());
-                              },
-                            );
+                          // onPressed: () async {
+                          //   await showCustomizationPopup(
+                          //     context: context,
+                          //     onCustomize: () {
+                          //       tripProvider.filtersList();
+                          //       Navigator.pop(context);
+                          //       Navigator.pushNamed(
+                          //           context, RoutesManager.customizationForm);
+                          //     },
+                          //     onSkip: () async {
+                          //       Navigator.pop(context);
+                          //       final request = tripProvider.buildRequest();
+                          //       final TripGenerated trip =
+                          //           await ApiServices.getGeneratedTrip(request);
+                          //       debugPrint(trip.toJson().toString());
+                          //     },
+                          //   );
+                          // },
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, RoutesManager.tripDetailsScreen);
                           },
                           child: const Text("Submit"),
                         ),

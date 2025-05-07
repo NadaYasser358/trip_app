@@ -12,10 +12,10 @@ class TripRequestProvider extends ChangeNotifier {
   int numberOfTravelers = 0;
   final List<String> _interests = [];
   final List<Widget> filters = [];
-  int maxRestaurants = 0;
-  int maxAccommodations = 0;
-  int maxEntertainments = 0;
-  int maxTourismAreas = 0;
+  int maxRestaurants = 3;
+  int maxAccommodations = 1;
+  int maxEntertainments = 2;
+  int maxTourismAreas = 2;
 
   List<String> get interestList => _interests;
 

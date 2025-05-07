@@ -1,3 +1,4 @@
+
 class TripGenerated {
   final int statusCode;
   final Meta meta;
@@ -19,15 +20,13 @@ class TripGenerated {
 
   factory TripGenerated.fromJson(Map<String, dynamic> json) {
     return TripGenerated(
-      statusCode: json['statusCode'],
-      meta: Meta.fromJson(json['meta']),
-      succeeded: json['succeeded'],
-      message: json['message'],
+      statusCode: json['statusCode'] ?? 0,
+      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : Meta.empty(),
+      succeeded: json['succeeded'] ?? false,
+      message: json['message'] ?? '',
       errors: json['errors'],
       errorsBag: json['errorsBag'],
-      data: json['data'] != null
-          ? TripData.fromJson(json['data'])
-          : TripData.empty(), // Add an empty fallback or make it nullable
+      data: json['data'] != null ? TripData.fromJson(json['data']) : TripData.empty(),
     );
   }
 
@@ -52,8 +51,15 @@ class Meta {
 
   factory Meta.fromJson(Map<String, dynamic> json) {
     return Meta(
-      totalItems: json['totalItems'],
-      totalSolutions: json['totalSolutions'],
+      totalItems: json['totalItems'] ?? 0,
+      totalSolutions: json['totalSolutions'] ?? 0,
+    );
+  }
+
+  factory Meta.empty() {
+    return Meta(
+      totalItems: 0,
+      totalSolutions: 0,
     );
   }
 
@@ -87,10 +93,18 @@ class TripData {
   }
   factory TripData.fromJson(Map<String, dynamic> json) {
     return TripData(
-      accommodation: Place.fromJson(json['accommodation']),
-      restaurants: List<Place>.from(json['restaurants'].map((x) => Place.fromJson(x))),
-      entertainments: List<Place>.from(json['entertainments'].map((x) => Place.fromJson(x))),
-      tourismAreas: List<Place>.from(json['tourismAreas'].map((x) => Place.fromJson(x))),
+      accommodation: json['accommodation'] != null
+          ? Place.fromJson(json['accommodation'])
+          : Place.empty(),
+      restaurants: json['restaurants'] != null
+          ? List<Place>.from(json['restaurants'].map((x) => Place.fromJson(x)))
+          : [],
+      entertainments: json['entertainments'] != null
+          ? List<Place>.from(json['entertainments'].map((x) => Place.fromJson(x)))
+          : [],
+      tourismAreas: json['tourismAreas'] != null
+          ? List<Place>.from(json['tourismAreas'].map((x) => Place.fromJson(x)))
+          : [],
     );
   }
 
@@ -138,13 +152,13 @@ class Place {
   }
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
-      id: json['id'],
-      name: json['name'],
-      classType: json['classType'],
-      averagePricePerAdult: json['averagePricePerAdult'],
-      score: (json['score'] as num).toDouble(),
-      placeType: json['placeType'],
-      rating: json['rating'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      classType: json['classType'] ?? '',
+      averagePricePerAdult: json['averagePricePerAdult'] ?? 0,
+      score: (json['score'] as num?)?.toDouble() ?? 0.0,
+      placeType: json['placeType'] ?? 0,
+      rating: json['rating'] ?? 0,
       imageSource: json['imageSource'],
     );
   }

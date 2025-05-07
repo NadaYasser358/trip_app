@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
             RoutesManager.tripDetailsScreen: (_) => const TripDetailsStepper(),
             RoutesManager.customizationForm: (_)=> const CustomizationForm()
           },
-          initialRoute: RoutesManager.home,
+          initialRoute: RoutesManager.tripDetailsScreen,
         );
       },
     );

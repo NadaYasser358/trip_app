@@ -1,24 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:graduation/model/data_models/trip_generated.dart';
 
-class CustomTripCard extends StatelessWidget {
-  const CustomTripCard({super.key});
-
+class CustomPlaceCard extends StatelessWidget {
+ const CustomPlaceCard({super.key, required this.place});
+  final Place place;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: Card(
-        child: Column(
-          children: [
-            const Image(image: AssetImage("assets/image/AbdeenPalace.jpg"),width: double.infinity,height: 200,fit: BoxFit.cover,),
-            ListTile(
-              title: const Text("Abdeen Palace"),
-              subtitle: const Text("Cairo"),
-              trailing: IconButton(onPressed: (){}, icon: const Icon(Icons.bookmark_outlined,size: 40,)),
-            )
-          ],
-        ),
-      ),
+      child: GestureDetector(
+            
+            child: Card(
+              elevation: 4,
+              margin: const EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              child: Container(
+                width: 200,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue.shade200, Colors.blue.shade50],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.place, size: 32, color: Colors.blue.shade900),
+                    const SizedBox(height: 8),
+                    Text(place.name,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text(place.placeType.toString(), style: const TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+            ),
+          )
     );
   }
 }
