@@ -5,6 +5,6 @@ class MarkedTripsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(color: Colors.yellow,);
+    return const Placeholder();
   }
 }

@@ -18,14 +18,22 @@ class CustomPlaceCard extends StatelessWidget {
               child: Container(
                 width: 200,
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.blue.shade200, Colors.blue.shade50],
-                    begin: Alignment.topLeft,
+                decoration: place.imageSource != null
+                    ? BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(place.imageSource!),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                      )
+                    : BoxDecoration(
+                   gradient: LinearGradient(
+                     colors: [Colors.blue.shade200, Colors.blue.shade50],
+                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                   ),
+                   borderRadius: BorderRadius.circular(16),
+                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -33,9 +41,13 @@ class CustomPlaceCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(place.name,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white)),
                     const SizedBox(height: 4),
-                    Text(place.placeType.toString(), style: const TextStyle(fontSize: 12)),
+                    Text(place.averagePricePerAdult != 0
+                        ? "Avg Price: ${place.averagePricePerAdult} EGP"
+                        : "Price not available",
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.white70)),
                   ],
                 ),
               ),

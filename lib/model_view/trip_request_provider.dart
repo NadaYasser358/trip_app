@@ -63,18 +63,26 @@ class TripRequestProvider extends ChangeNotifier {
   }
 
   void filtersList() {
-    if (_interests.contains("food")) {
-      filters.add(const FoodFilter());
+    final List<Widget> newFilters = [];
+    for (final interest in _interests) {
+      switch (interest) {
+        case "food":
+          newFilters.add(const FoodFilter());
+          break;
+        case "entertainments":
+          newFilters.add(const EntertainmentsFilter());
+          break;
+        case "tourismAreas":
+          newFilters.add(const TourismFilter());
+          break;
+        case "accommodation":
+          newFilters.add(const AccommodationFilter());
+          break;
+      }
     }
-    if (_interests.contains("entertainments")) {
-      filters.add(const EntertainmentsFilter());
-    }
-    if (_interests.contains("tourismAreas")) {
-      filters.add(const TourismFilter());
-    }
-    if (_interests.contains("accommodation")) {
-      filters.add(const AccommodationFilter());
-    }
+    filters
+      ..clear()
+      ..addAll(newFilters);
     notifyListeners();
   }
 
@@ -113,4 +121,19 @@ class TripRequestProvider extends ChangeNotifier {
       maxTourismAreas: maxTourismAreas,
     );
   }
+
+  void reset() {
+    governorateId = 0;
+    zoneId = 0;
+    budgetPerAdult = 0;
+    numberOfTravelers = 0;
+    _interests.clear();
+    filters.clear();
+    maxRestaurants = 3;
+    maxAccommodations = 1;
+    maxEntertainments = 2;
+    maxTourismAreas = 2;
+    notifyListeners();
+  }
+
 }

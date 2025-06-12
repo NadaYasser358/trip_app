@@ -1,13 +1,13 @@
 // lib/pages/trip_form_page.dart
 
 import 'package:flutter/material.dart';
-import 'package:graduation/app_constants/routes_manager.dart';
-import 'package:graduation/app_constants/service_allocator.dart';
+import 'package:graduation/model/data_models/trip_generated.dart';
+import 'package:graduation/model/data_models/trip_request.dart';
+import 'package:graduation/model/data_sources/api_services.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
+import 'package:graduation/view/screens/trip_details.dart';
 import 'package:graduation/view/widgets/custom_dialog.dart';
 import 'package:provider/provider.dart';
-import '../../../model/data_models/trip_generated.dart';
-import '../../../model/data_sources/api_services.dart';
 import 'form_screens/budget.dart';
 import 'form_screens/distnation.dart';
 import 'form_screens/interests_check.dart';
@@ -31,6 +31,13 @@ class _BasicTripFormState extends State<BasicTripForm> {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<TripRequestProvider>(context, listen: false)
+        .reset();
   }
 
   void _prevPage() {
@@ -100,27 +107,17 @@ class _BasicTripFormState extends State<BasicTripForm> {
                             onPressed: _nextPage, child: const Text("Next"))
                       else
                         ElevatedButton(
-                          // onPressed: () async {
-                          //   await showCustomizationPopup(
-                          //     context: context,
-                          //     onCustomize: () {
-                          //       tripProvider.filtersList();
-                          //       Navigator.pop(context);
-                          //       Navigator.pushNamed(
-                          //           context, RoutesManager.customizationForm);
-                          //     },
-                          //     onSkip: () async {
-                          //       Navigator.pop(context);
-                          //       final request = tripProvider.buildRequest();
-                          //       final TripGenerated trip =
-                          //           await ApiServices.getGeneratedTrip(request);
-                          //       debugPrint(trip.toJson().toString());
-                          //     },
-                          //   );
-                          // },
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, RoutesManager.tripDetailsScreen);
+                          onPressed: () async {
+                            TripRequest request = tripProvider.buildRequest();
+                            TripGenerated trip =
+                                await ApiServices.getGeneratedTrip(request);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TripDetails(
+                                          tripGenerated: trip,
+                                          tripRequest: request,
+                                        )));
                           },
                           child: const Text("Submit"),
                         ),

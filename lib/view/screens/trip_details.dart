@@ -1,122 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:graduation/app_constants/ids.dart';
 import 'package:graduation/model/data_models/trip_generated.dart';
+import 'package:graduation/model/data_models/trip_request.dart';
 import 'package:graduation/view/widgets/custom_trip_card.dart';
 
-class TripDetailsStepper extends StatefulWidget {
-  const TripDetailsStepper({super.key});
-
-  @override
-  State<TripDetailsStepper> createState() => _TripDetailsStepperState();
-}
-
-class _TripDetailsStepperState extends State<TripDetailsStepper> {
-  int _currentStep = 0;
-  final  TripGenerated staticTripGenerated = TripGenerated(
-  statusCode: 0,
-  meta: Meta(
-    totalItems: 5,
-    totalSolutions: 1,
-  ),
-  succeeded: true,
-  message: 'Trip plan optimized successfully',
-  errors: null,
-  errorsBag: null,
-  data: TripData(
-    accommodation: Place(
-      id: 12,
-      name: 'Sonesta 2 Tower & Casino Cairo',
-      classType: 'A',
-      averagePricePerAdult: 8147,
-      score: 2.88,
-      placeType: 0,
-      rating: 0,
-      imageSource: null,
-    ),
-    restaurants: [
-      Place(
-        id: 18,
-        name: 'If Tarboosh is old food',
-        classType: 'A',
-        averagePricePerAdult: 720,
-        score: 4.0,
-        placeType: 1,
-        rating: 0,
-        imageSource: null,
-      ),
-      Place(
-        id: 62,
-        name: 'Arabiata',
-        classType: 'D',
-        averagePricePerAdult: 100,
-        score: 1.0,
-        placeType: 1,
-        rating: 0,
-        imageSource: null,
-      ),
-    ],
-    entertainments: [
-      Place(
-        id: 11,
-        name: 'El Wonderland',
-        classType: 'A',
-        averagePricePerAdult: 200,
-        score: 4.4,
-        placeType: 2,
-        rating: 0,
-        imageSource: null,
-      ),
-    ],
-    tourismAreas: [
-      Place(
-        id: 44,
-        name: 'International Garden',
-        classType: 'B',
-        averagePricePerAdult: 10,
-        score: 4.32,
-        placeType: 3,
-        rating: 0,
-        imageSource: null,
-      ),
-    ],
-  ),
-);
+class TripDetails extends StatelessWidget {
+  const TripDetails(
+      {super.key, required this.tripGenerated, required this.tripRequest});
+  final TripGenerated tripGenerated;
+  final TripRequest tripRequest;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trip Details'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
-      body: Stepper(
-        currentStep: _currentStep,
-        onStepTapped: (index) => setState(() => _currentStep = index),
-        onStepContinue: () =>
-            setState(() => _currentStep = (_currentStep + 1).clamp(0, 3)),
-        onStepCancel: () =>
-            setState(() => _currentStep = (_currentStep - 1).clamp(0, 3)),
-        steps: [
-          Step(
-            title: const Text('Accommodation'),
-            content: CustomPlaceCard(place: staticTripGenerated.data.accommodation),
-            // _buildCardList(staticTripGenerated.data.accommodation),
-            isActive: _currentStep >= 0,
+      body: ListView(
+        children: [
+          Text(
+            "Trip to: ${DataIds.governorates[tripRequest.governorateId! - 1]}",
+            textAlign: TextAlign.center,
           ),
-          Step(
-            title: const Text('Restaurants'),
-            content: _buildCardList(staticTripGenerated.data.restaurants
-                ),
-            isActive: _currentStep >= 1,
-          ),
-          Step(
-            title: const Text('Entertainment'),
-            content: _buildCardList(staticTripGenerated.data.entertainments),
-            isActive: _currentStep >= 2,
-          ),
-          Step(
-            title: const Text('Tourism Areas'),
-            content: _buildCardList(
-                staticTripGenerated.data.tourismAreas),
-            isActive: _currentStep >= 3,
-          ),
+          const SizedBox(height: 10),
+          const Text(
+              "Explore city in a day with a focus on your interests: Food, Entertainment, Tourism, and Accommodation."),
+          const SizedBox(height: 20),
+          const Text("Your Trip Includes:"),
+          const SizedBox(height: 10),
+          Text("budget: ${tripRequest.budgetPerAdult} EGP"),
+          // --- Trip Data Section by User Interests ---
+          const SizedBox(height: 20),
+          ...tripRequest.interests.map((interest) {
+            switch (interest) {
+              case "food":
+                if (tripGenerated.data.restaurants.isNotEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Food & Restaurants",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      _buildCardList(tripGenerated.data.restaurants),
+                    ],
+                  );
+                }
+                break;
+              case "entertainments":
+                if (tripGenerated.data.entertainments.isNotEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Entertainment",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      _buildCardList(tripGenerated.data.entertainments),
+                    ],
+                  );
+                }
+                break;
+              case "tourismAreas":
+                if (tripGenerated.data.tourismAreas.isNotEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Tourism Areas",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      _buildCardList(tripGenerated.data.tourismAreas),
+                    ],
+                  );
+                }
+                break;
+              case "accommodation":
+                if (tripGenerated.data.accommodation.name.isNotEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Accommodation",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      CustomPlaceCard(place: tripGenerated.data.accommodation),
+                    ],
+                  );
+                }
+                break;
+            }
+            return const SizedBox.shrink();
+          }),
         ],
       ),
     );
@@ -134,5 +104,4 @@ class _TripDetailsStepperState extends State<TripDetailsStepper> {
       ),
     );
   }
-
 }

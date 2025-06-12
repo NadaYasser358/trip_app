@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graduation/app_constants/service_allocator.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
 import 'package:provider/provider.dart';
 
