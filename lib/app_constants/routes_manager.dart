@@ -5,5 +5,6 @@ class RoutesManager{
   static const String onboardingScreen="/onboarding";
   static const String loginScreen="/login";
   static const String signupScreen="/signup";
-
+  static const String itemDetailsScreen="/itemDetails";
+  static const String accScreen="/accScreen";
 }

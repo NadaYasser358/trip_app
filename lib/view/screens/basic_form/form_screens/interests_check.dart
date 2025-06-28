@@ -36,28 +36,28 @@ class _InterestsCheckState extends State<InterestsCheck> {
             checker: food,
             changed: (value) => setState(() {
                   food = value ?? false;
-                  provider.food(food);
+                  provider.food = food;
                 }),
             title: "food"),
         CustomCheckBox(
             checker: acc,
             changed: (value) => setState(() {
                   acc = value ?? false;
-                  provider.accommodation(acc);
+                  provider.acc=acc;
                 }),
             title: "Accommodation"),
         CustomCheckBox(
             checker: inter,
             changed: (value) => setState(() {
                   inter = value ?? false;
-                  provider.enter(inter);
+                  provider.enter=inter;
                 }),
             title: "Entertainments"),
         CustomCheckBox(
             checker: tourist,
             changed: (value) => setState(() {
                   tourist = value ?? false;
-                  provider.tourism(tourist);
+                  provider.tourism=tourist;
                 }),
             title: "Tourism areas"),
       ],

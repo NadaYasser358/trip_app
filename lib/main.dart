@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation/app_constants/routes_manager.dart';
-import 'package:graduation/firebase_options.dart';
 import 'package:graduation/model_view/trip_request_provider.dart';
 import 'package:graduation/view/screens/auth/login.dart';
 import 'package:graduation/view/screens/auth/signup.dart';
@@ -12,14 +11,15 @@ import 'package:graduation/view/screens/onboarding.dart';
 import 'package:graduation/view/theme/light.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    //options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => TripRequestProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TripRequestProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
       // Use builder only if you need to use library outside ScreenUtilInit context
       builder: (_, child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           routes: {
             RoutesManager.home: (_) => const Home(),

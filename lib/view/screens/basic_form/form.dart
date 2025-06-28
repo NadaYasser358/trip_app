@@ -12,6 +12,7 @@ import 'form_screens/budget.dart';
 import 'form_screens/distnation.dart';
 import 'form_screens/interests_check.dart';
 import 'form_screens/interests_reorder.dart';
+import 'package:lottie/lottie.dart';
 
 class BasicTripForm extends StatefulWidget {
   const BasicTripForm({super.key});
@@ -23,6 +24,8 @@ class BasicTripForm extends StatefulWidget {
 class _BasicTripFormState extends State<BasicTripForm> {
   final _pageController = PageController();
   int _pageIndex = 0;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   void _nextPage() {
     FocusScope.of(context).unfocus();
@@ -32,12 +35,11 @@ class _BasicTripFormState extends State<BasicTripForm> {
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
-    Provider.of<TripRequestProvider>(context, listen: false)
-        .reset();
+    //Provider.of<TripRequestProvider>(context, listen: false).reset();
   }
 
   void _prevPage() {
@@ -51,8 +53,8 @@ class _BasicTripFormState extends State<BasicTripForm> {
 
   Future<void> showCustomizationPopup({
     required BuildContext context,
-    required VoidCallback onCustomize,
-    required VoidCallback onSkip,
+    required VoidCallback onOptimal,
+    required VoidCallback onGreedy,
   }) {
     return showDialog(
       context: context,
@@ -60,14 +62,30 @@ class _BasicTripFormState extends State<BasicTripForm> {
         return CustomizationDialog(
           title: 'Customize Your Trip',
           message:
-              'Would you like to further customize your interests before we generate your trip?',
-          primaryButtonText: 'Yes, customize',
-          secondaryButtonText: 'No, generate now',
-          onPrimaryPressed: onCustomize,
-          onSecondaryPressed: onSkip,
+              'Would you like to customize your trip with optimal or greedy algorithm?',
+          primaryButtonText: 'optimal',
+          secondaryButtonText: 'greedy',
+          onPrimaryPressed: onOptimal,
+          onSecondaryPressed: onGreedy,
         );
       },
     );
+  }
+
+  Future<void> _showErrorDialog(String message) async {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+    );
+    await Future.delayed(const Duration(seconds: 10));
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -76,56 +94,132 @@ class _BasicTripFormState extends State<BasicTripForm> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Plan Your Trip")),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      body: Stack(
         children: [
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                Destination(),
-                BudgetTravelers(),
-                InterestsCheck(),
-                InterestsReorder(),
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: const [
+                    Destination(),
+                    BudgetTravelers(),
+                    InterestsCheck(),
+                    InterestsReorder(),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: _pageIndex == 0
+                    ? ElevatedButton(
+                        onPressed: _nextPage, child: const Text("Next"))
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (_pageIndex > 0)
+                            TextButton(
+                                onPressed: _prevPage,
+                                child: const Text("Back")),
+                          if (_pageIndex < 3)
+                            ElevatedButton(
+                                onPressed: _nextPage, child: const Text("Next"))
+                          else
+                            ElevatedButton(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () => showCustomizationPopup(
+                                        context: context,
+                                        onOptimal: () =>
+                                            _optimizeTrip(tripProvider),
+                                        onGreedy: () =>
+                                            _greedyTrip(tripProvider),
+                                      ),
+                              child: const Text("Submit"),
+                            ),
+                        ],
+                      ),
+              )
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: _pageIndex == 0
-                ? ElevatedButton(
-                    onPressed: _nextPage, child: const Text("Next"))
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (_pageIndex > 0)
-                        TextButton(
-                            onPressed: _prevPage, child: const Text("Back")),
-                      if (_pageIndex < 3)
-                        ElevatedButton(
-                            onPressed: _nextPage, child: const Text("Next"))
-                      else
-                        ElevatedButton(
-                          onPressed: () async {
-                            TripRequest request = tripProvider.buildRequest();
-                            TripGenerated trip =
-                                await ApiServices.getGeneratedTrip(request);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TripDetails(
-                                          tripGenerated: trip,
-                                          tripRequest: request,
-                                        )));
-                          },
-                          child: const Text("Submit"),
-                        ),
-                    ],
+          if (_isLoading)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.white,
+              child: Center(
+                  child: Column(
+                children: [
+                  Lottie.asset('assets/lotties/request_loading.json'),
+                  const Text(
+                    "Generating your trip, please wait...",
+                    style: TextStyle(fontSize: 18, color: Colors.black54),
                   ),
-          )
+                ],
+              )),
+            ),
         ],
       ),
     );
+  }
+
+  Future<void> _optimizeTrip(TripRequestProvider tripProvider) async {
+    Navigator.pop(context); // Close the customization dialog
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      TripRequest request = tripProvider.buildRequest();
+      TripGenerated trip = await ApiServices.getGeneratedTrip(request);
+      setState(() => _isLoading = false);
+      if (!mounted) return; // Check if the widget is still mounted
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TripDetails(
+            tripGenerated: trip,
+            tripRequest: request,
+          ),
+        ),
+      );
+    } catch (e) {
+    if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      await _showErrorDialog(e.toString());
+    }
+  }
+
+  Future<void> _greedyTrip(TripRequestProvider tripProvider) async {
+    Navigator.pop(context);
+    if (!mounted) return; // Close the customization dialog
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      TripRequest request = tripProvider.buildRequest();
+      TripGenerated trip = await ApiServices.getGreedyTrip(request);
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TripDetails(
+            tripGenerated: trip,
+            tripRequest: request,
+          ),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      await _showErrorDialog(e.toString());
+    }
   }
 }

@@ -1,44 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graduation/model/data_models/accommodation.dart';
-import 'package:graduation/model/data_models/entertainment.dart';
-import 'package:graduation/model/data_models/restaurant.dart';
-import 'package:graduation/model/data_models/tourism_area.dart';
-import 'package:graduation/model/data_models/trip_generated.dart';
 import 'package:graduation/model/data_models/trip_item.dart';
 import 'package:graduation/view/screens/item_details_screen.dart';
 
-class CustomPlaceCard extends StatelessWidget {
-  const CustomPlaceCard({super.key, required this.place});
-  final Place place;
+class ItemCard extends StatelessWidget {
+  const ItemCard({super.key, required this.place});
+  final TripItem place;
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(10.r),
         child: GestureDetector(
           onTap: () async {
-            TripItem item;
-            switch (place.placeType) {
-              case 0:
-                item = await Accommodation.getItemById(place.id);
-                break;
-              case 1:
-                item = await Restaurant.getItemById(place.id);
-                break;
-              case 2:
-                item = await Entertainment.getItemById(place.id);
-                break;
-              case 3:
-                item = await TourismArea.getItemById(place.id);
-                break;
-              default:
-                item = TripItem.fromJson({});
-                break;
-            }
+           
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ItemDetailsScreen(item: item),
+                builder: (context) => ItemDetailsScreen(item: place),
               ),
             );
           },
@@ -51,11 +29,11 @@ class CustomPlaceCard extends StatelessWidget {
               width: 200.w,
               height: 150.h,
               //padding: EdgeInsets.all(16.r),
-              decoration: place.imageSource != null
+              decoration: place.imageUrl != null
                   ? BoxDecoration(
                       //color: Colors.black.withOpacity(0.7),
                       image: DecorationImage(
-                        image: NetworkImage(place.imageSource!),
+                        image: NetworkImage(place.imageUrl!),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(16.r),

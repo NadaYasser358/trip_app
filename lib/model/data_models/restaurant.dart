@@ -1,43 +1,52 @@
-class Restaurant {
-  final int id;
-  final String name;
+
+import 'package:graduation/app_constants/api_constants.dart';
+import 'package:graduation/model/data_models/trip_item.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as https;
+
+class Restaurant extends TripItem{
+  
   final String foodCategory;
-  final String classType;
-  final String zone;
-  final int zoneId;
-  final String governorate;
-  final int governorateId;
-  final int rating;
-  final String placeType;
-  final int averagePricePerAdult;
-  final bool hasKidsArea;
-  final String? description;
-  final String address;
-  final String? mapLink;
-  final String? contactLink;
-  final String? imageUrl;
-  final double score;
+  
 
   Restaurant({
-    required this.id,
-    required this.name,
+    required int id,
+    required String name,
     required this.foodCategory,
-    required this.classType,
-    required this.zone,
-    required this.zoneId,
-    required this.governorate,
-    required this.governorateId,
-    required this.rating,
-    required this.placeType,
-    required this.averagePricePerAdult,
-    required this.hasKidsArea,
-    this.description,
-    required this.address,
-    this.mapLink,
-    this.contactLink,
-    this.imageUrl,
-    required this.score,
-  });
+    required String classType,
+    required String zone, 
+    required int zoneId,
+    required String governorate,
+    required int governorateId,
+    required double rating,
+    required String placeType,
+    required int averagePricePerAdult,
+    required bool hasKidsArea,
+    required String description,
+    required String address,
+    String? mapLink,
+    String? contactLink,
+    String? imageUrl,
+    required double score,
+  }):super(
+    id: id,
+    name: name,
+    classType: classType,
+    zone: zone,
+    zoneId: zoneId,
+    governorate: governorate,
+    governorateId: governorateId,
+    rating: rating,
+    placeType: placeType,
+    averagePricePerAdult: averagePricePerAdult,
+    hasKidsArea: hasKidsArea,
+    description: description,
+    address: address,
+    mapLink: mapLink,
+    contactLink: contactLink,
+    imageUrl: imageUrl,
+    score: score,
+  );
 
   factory Restaurant.fromJson(Map<String, dynamic> json) {
     return Restaurant(
@@ -49,16 +58,42 @@ class Restaurant {
       zoneId: json['zoneId'] ?? 0,
       governorate: json['governorate'] ?? '',
       governorateId: json['governorateId'] ?? 0,
-      rating: json['rating'] ?? 0,
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       placeType: json['placeType'] ?? '',
       averagePricePerAdult: json['averagePricePerAdult'] ?? 0,
       hasKidsArea: json['hasKidsArea'] ?? false,
-      description: json['description'],
+      description: json['description'] ?? '',
       address: json['address'] ?? '',
-      mapLink: json['mapLink'],
-      contactLink: json['contactLink'],
-      imageUrl: json['imageUrl'],
+      mapLink: json['mapLink'] ?? '',
+      contactLink: json['contactLink']  ?? '',
+      imageUrl: json['imageUrl']  ?? '',
       score: (json['score'] as num?)?.toDouble() ?? 0.0,
     );
+  }
+  
+  static Future<Restaurant> getItemById(int id) async{
+    var url = Uri.https(ApiConstants.baseUrl, '/Api/v1/restaurant/$id');
+    final response = await https.get(url);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Restaurant data: ${data['data'].toString()}');
+      return Restaurant.fromJson(data['data']);
+    } else {
+      throw Exception('Failed to get restaurant: ${response.body}');
+    }
+  }
+
+  static Future<List<Restaurant>> getAllItems() async {
+    var url = Uri.https(ApiConstants.baseUrl, '/Api/v1/restaurant/list');
+    final response = await https.get(url);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Restaurants data: ${data['data'].toString()}');
+      return (data['data'] as List)
+          .map((item) => Restaurant.fromJson(item))
+          .toList();
+    } else {
+      throw Exception('Failed to get restaurants: ${response.body}');
+    }
   }
 }

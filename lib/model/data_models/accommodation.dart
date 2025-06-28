@@ -1,73 +1,105 @@
-class Accommodation {
-  final int id;
-  final String name;
-  final String? accomodationType;
-  final String classType;
-  final String zone;
-  final int zoneId;
-  final String governorate;
-  final int governorateId;
-  final int rating;
-  final String placeType;
-  final int averagePricePerAdult;
-  final bool hasKidsArea;
-  final String description;
-  final String address;
-  final String? mapLink;
-  final String? contactLink;
-  final String? imageUrl;
+import 'package:graduation/app_constants/api_constants.dart';
+import 'package:graduation/model/data_models/trip_item.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as https;
+
+class Accommodation extends TripItem {
+  final String accomodationType;
+
   final int numOfBeds;
   final String bedStatus;
   final int numOfPersons;
-  final double score;
 
   Accommodation({
-    required this.id,
-    required this.name,
-    this.accomodationType,
-    required this.classType,
-    required this.zone,
-    required this.zoneId,
-    required this.governorate,
-    required this.governorateId,
-    required this.rating,
-    required this.placeType,
-    required this.averagePricePerAdult,
-    required this.hasKidsArea,
-    required this.description,
-    required this.address,
-    this.mapLink,
-    this.contactLink,
-    this.imageUrl,
+    required int id,
+    required String name,
+    required String classType,
+    required String zone,
+    required int zoneId,
+    required String governorate,
+    required int governorateId,
+    required double rating,
+    required String placeType,
+    required int averagePricePerAdult,
+    required bool hasKidsArea,
+    required String description,
+    required String address,
+    String? mapLink,
+    String? contactLink,
+    String? imageUrl,
+    required double score,
+    required this.accomodationType,
     required this.numOfBeds,
     required this.bedStatus,
     required this.numOfPersons,
-    required this.score,
-  });
+  }) : super(
+          id: id,
+          name: name,
+          classType: classType,
+          zone: zone,
+          zoneId: zoneId,
+          governorate: governorate,
+          governorateId: governorateId,
+          rating: rating,
+          placeType: placeType,
+          averagePricePerAdult: averagePricePerAdult,
+          hasKidsArea: hasKidsArea,
+          description: description,
+          address: address,
+          mapLink: mapLink,
+          contactLink: contactLink,
+          imageUrl: imageUrl,
+          score: score,
+        );
 
   factory Accommodation.fromJson(Map<String, dynamic> json) {
     return Accommodation(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
-      accomodationType: json['accomodationType'],
       classType: json['classType'] ?? '',
       zone: json['zone'] ?? '',
       zoneId: json['zoneId'] ?? 0,
       governorate: json['governorate'] ?? '',
       governorateId: json['governorateId'] ?? 0,
-      rating: json['rating'] ?? 0,
+      rating: (json['rating'] as num).toDouble(),
       placeType: json['placeType'] ?? '',
       averagePricePerAdult: json['averagePricePerAdult'] ?? 0,
       hasKidsArea: json['hasKidsArea'] ?? false,
       description: json['description'] ?? '',
       address: json['address'] ?? '',
-      mapLink: json['mapLink'],
-      contactLink: json['contactLink'],
-      imageUrl: json['imageUrl'],
+      mapLink: json['mapLink'] as String?,
+      contactLink: json['contactLink'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+      score: (json['score'] as num).toDouble(),
+      accomodationType: json['accomodationType'] ?? '',
       numOfBeds: json['numOfBeds'] ?? 0,
       bedStatus: json['bedStatus'] ?? '',
       numOfPersons: json['numOfPersons'] ?? 0,
-      score: (json['score'] as num?)?.toDouble() ?? 0.0,
     );
+  }
+
+  static Future<Accommodation> getItemById(int id) async {
+    var url = Uri.https(ApiConstants.baseUrl, '/Api/v1/accommodation/$id');
+    final response = await https.get(url);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Accommodation data: ${data['data'].toString()}');
+      return Accommodation.fromJson(data['data']);
+    } else {
+      throw Exception('Failed to get accommodation: ${response.body}');
+    }
+  }
+
+  static Future<List<Accommodation>> getAllItems() async {
+    var url = Uri.https(ApiConstants.baseUrl, '/Api/v1/accommodation/list');
+    final response = await https.get(url);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Accommodation list data: ${data['data'].toString()}');
+      List<dynamic> items = data['data'];
+      return items.map((item) => Accommodation.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to get accommodations: ${response.body}');
+    }
   }
 }

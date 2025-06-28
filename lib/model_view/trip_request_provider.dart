@@ -1,9 +1,6 @@
 import 'package:graduation/model/data_models/trip_request.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation/view/screens/customize_form/taps/accommodation_filters.dart';
-import 'package:graduation/view/screens/customize_form/taps/entertainments_filter.dart';
-import 'package:graduation/view/screens/customize_form/taps/food.dart';
-import 'package:graduation/view/screens/customize_form/taps/tourizm_filter.dart';
+
 
 class TripRequestProvider extends ChangeNotifier {
   int governorateId = 0;
@@ -11,7 +8,6 @@ class TripRequestProvider extends ChangeNotifier {
   int budgetPerAdult = 0;
   int numberOfTravelers = 0;
   final List<String> _interests = [];
-  final List<Widget> filters = [];
   int maxRestaurants = 3;
   int maxAccommodations = 1;
   int maxEntertainments = 2;
@@ -19,6 +15,26 @@ class TripRequestProvider extends ChangeNotifier {
 
   List<String> get interestList => _interests;
 
+  bool _food = false;
+  set food(bool value) {
+    _food = value;
+    notifyListeners();
+  }
+  bool _enter = false;
+  set enter(bool value) {
+    _enter = value;
+    notifyListeners();
+  }
+  bool _acc = false;
+  set acc(bool value) {
+    _acc = value;
+    notifyListeners();
+  }
+  bool _tourism = false;
+  set tourism(bool value) {
+    _tourism = value;
+    notifyListeners();
+  }
   void updateGovernorate(int value) {
     governorateId = value;
     notifyListeners();
@@ -39,22 +55,6 @@ class TripRequestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void food(bool selected) {
-    _toggleInterest("food", selected);
-  }
-
-  void accommodation(bool selected) {
-    _toggleInterest("accommodation", selected);
-  }
-
-  void enter(bool selected) {
-    _toggleInterest("entertainments", selected);
-  }
-
-  void tourism(bool selected) {
-    _toggleInterest("tourismAreas", selected);
-  }
-
   void orderedInterests(List<String> values) {
     _interests
       ..clear()
@@ -62,35 +62,22 @@ class TripRequestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void filtersList() {
-    final List<Widget> newFilters = [];
-    for (final interest in _interests) {
-      switch (interest) {
-        case "food":
-          newFilters.add(const FoodFilter());
-          break;
-        case "entertainments":
-          newFilters.add(const EntertainmentsFilter());
-          break;
-        case "tourismAreas":
-          newFilters.add(const TourismFilter());
-          break;
-        case "accommodation":
-          newFilters.add(const AccommodationFilter());
-          break;
-      }
-    }
-    filters
-      ..clear()
-      ..addAll(newFilters);
-    notifyListeners();
-  }
+  
 
-  void _toggleInterest(String name, bool isSelected) {
-    if (isSelected && !_interests.contains(name)) {
-      _interests.add(name);
-    } else if (!isSelected && _interests.contains(name)) {
-      _interests.remove(name);
+  void checkedInterest() {
+    _interests.clear();
+
+    if (_food) {
+      _interests.add("food");
+    } 
+    if (_acc) {
+      _interests.add("accommodation");
+    }
+    if (_enter) {
+      _interests.add("entertainment");
+    }
+    if (_tourism) {
+      _interests.add("tourism");
     }
     notifyListeners();
   }
@@ -122,18 +109,5 @@ class TripRequestProvider extends ChangeNotifier {
     );
   }
 
-  void reset() {
-    governorateId = 0;
-    zoneId = 0;
-    budgetPerAdult = 0;
-    numberOfTravelers = 0;
-    _interests.clear();
-    filters.clear();
-    maxRestaurants = 3;
-    maxAccommodations = 1;
-    maxEntertainments = 2;
-    maxTourismAreas = 2;
-    notifyListeners();
-  }
-
+ 
 }

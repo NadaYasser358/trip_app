@@ -125,7 +125,7 @@ class Place {
   final int averagePricePerAdult;
   final double score;
   final int placeType;
-  final int rating;
+  final double rating;
   final String? imageSource;
 
   Place({
@@ -158,7 +158,7 @@ class Place {
       averagePricePerAdult: json['averagePricePerAdult'] ?? 0,
       score: (json['score'] as num?)?.toDouble() ?? 0.0,
       placeType: json['placeType'] ?? 0,
-      rating: json['rating'] ?? 0,
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       imageSource: json['imageSource'],
     );
   }
